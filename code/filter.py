@@ -1,17 +1,17 @@
 import json
 
-# Store business ids in toronto
-business_ids = set()
+# Store restaurant ids in toronto
+restaurant_ids = set()
 
-# Business
-print("Business...")
-with open("../data/filtered/business.json", "w") as filtered_business_file:
+# Restaurant
+print("Restaurant...")
+with open("../data/filtered/restaurant.json", "w") as filtered_restaurant_file:
   for l in open("../data/dataset/business.json", "r"):    
     business = json.loads(l)
-    if business["city"] == "Toronto":
-      json.dump(business, filtered_business_file)
-      filtered_business_file.write("\n")
-      business_ids.add(business["business_id"])
+    if business["city"] == "Toronto" and "Restaurants" in business['categories']:
+      json.dump(business, filtered_restaurant_file)
+      filtered_restaurant_file.write("\n")
+      restaurant_ids.add(business["business_id"])
 
 # Store users who either commented or gave a tip on a business
 user_ids = set()
@@ -21,17 +21,17 @@ print("Review...")
 with open("../data/filtered/review.json", "w") as filtered_review_file:
   for l in open("../data/dataset/review.json", "r"):    
     review = json.loads(l)
-    if review["business_id"] in business_ids:
+    if review["business_id"] in restaurant_ids:
       json.dump(review, filtered_review_file)
       filtered_review_file.write("\n")
-      user_ids.add(review["business_id"])
+      user_ids.add(review["user_id"])
 
 # Tip
 print("Tip...")
 with open("../data/filtered/tip.json", "w") as filtered_tip_file:
   for l in open("../data/dataset/tip.json", "r"):    
     tip = json.loads(l)
-    if tip["business_id"] in business_ids:
+    if tip["business_id"] in restaurant_ids:
       json.dump(tip, filtered_tip_file)
       filtered_tip_file.write("\n")
       user_ids.add(tip["user_id"])
